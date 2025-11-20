@@ -22,3 +22,4 @@ C:\Users\jg_la\Documents\trabalho-final-SO\MonitorGpu\obj\Debug\net9.0-windows\r
 C:\Users\jg_la\Documents\trabalho-final-SO\MonitorGpu\obj\Debug\net9.0-windows\MonitorGpu.pdb
 C:\Users\jg_la\Documents\trabalho-final-SO\MonitorGpu\obj\Debug\net9.0-windows\MonitorGpu.genruntimeconfig.cache
 C:\Users\jg_la\Documents\trabalho-final-SO\MonitorGpu\obj\Debug\net9.0-windows\ref\MonitorGpu.dll
+C:\Users\jg_la\Documents\trabalho-final-SO\MonitorGpu\obj\Debug\net9.0-windows\MonitorGpu.sourcelink.json
