@@ -1,27 +1,30 @@
 using System.Diagnostics;
 
-public class FpsCounter
+namespace MonitorGpu.Services
 {
-    private Stopwatch sw = new Stopwatch();
-    private int frames = 0;
-    private double fps = 0;
-
-    public void Start()
+    public class FpsCounter
     {
-        sw.Restart();
-        frames = 0;
-    }
+        private Stopwatch sw = new Stopwatch();
+        private int frames = 0;
+        private double fps = 0;
 
-    public void Frame()
-    {
-        frames++;
-        if (sw.ElapsedMilliseconds >= 1000)
+        public void Start()
         {
-            fps = frames / (sw.ElapsedMilliseconds / 1000.0);
-            frames = 0;
             sw.Restart();
+            frames = 0;
         }
-    }
 
-    public double GetFps() => fps;
+        public void Frame()
+        {
+            frames++;
+            if (sw.ElapsedMilliseconds >= 1000)
+            {
+                fps = frames / (sw.ElapsedMilliseconds / 1000.0);
+                frames = 0;
+                sw.Restart();
+            }
+        }
+
+        public double GetFps() => fps;
+    }
 }

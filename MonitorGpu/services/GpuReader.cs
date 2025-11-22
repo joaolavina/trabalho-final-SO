@@ -1,21 +1,24 @@
 using System.Management;
 
-public class GpuReader
+namespace MonitorGpu.Services
 {
-    public float GetUsage()
+    public class GpuReader
     {
-        float usage = 0.0f;
-        var searcher = new ManagementObjectSearcher("root\\CIMV2",
-            "SELECT * FROM Win32_PerfFormattedData_GPUPerformanceCounters_GPUEngine"); // whats 2
-
-        foreach (ManagementObject obj in searcher.Get())
+        public float GetUsage()
         {
-            string name = obj["Name"]?.ToString() ?? ""; // whats
-            if (name.Contains("engtype_3D")) // foca em engine 3D POR QUE ?
+            float usage = 0.0f;
+            var searcher = new ManagementObjectSearcher("root\\CIMV2",
+                "SELECT * FROM Win32_PerfFormattedData_GPUPerformanceCounters_GPUEngine"); // whats 2
+
+            foreach (ManagementObject obj in searcher.Get())
             {
-                usage += Convert.ToSingle(obj["UtilizationPercentage"]);
+                string name = obj["Name"]?.ToString() ?? ""; // whats
+                if (name.Contains("engtype_3D")) // foca em engine 3D POR QUE ?
+                {
+                    usage += Convert.ToSingle(obj["UtilizationPercentage"]);
+                }
             }
+            return usage; // 0-100%
         }
-        return usage; // 0-100%
     }
 }

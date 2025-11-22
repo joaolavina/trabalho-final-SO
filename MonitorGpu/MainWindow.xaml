@@ -1,7 +1,7 @@
 ﻿<Window x:Class="MonitorGpu.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="GpuMonitor - FPS e Sistema" Height="480" Width="720"
+        Title="OS Monitor" Height="480" Width="720"
         MinHeight="420" MinWidth="600">
     <Grid Margin="12">
         <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
                     <TextBlock x:Name="TxtGpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
                     <TextBlock Text="Memória física:"/>
                     <TextBlock x:Name="TxtRam" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <TextBlock Text="GPU - Nome (se detectada):" Margin="0,6,0,0"/>
+                    <TextBlock Text="GPU (nome):" Margin="0,6,0,0"/>
                     <TextBlock x:Name="TxtGpuName" FontSize="13" Margin="0,0,0,6"/>
                 </StackPanel>
             </StackPanel>
@@ -57,11 +57,5 @@
                          AcceptsReturn="True" Height="260"/>
             </StackPanel>
         </Grid>
-
-        <!-- Rodapé / instruções -->
-        <TextBlock Grid.Row="2" TextWrapping="Wrap" Margin="0,10,0,0">
-            Observações: o contador de FPS mede os frames da própria app (WPF). Para FPS de outros programas é necessário hook/injeção.
-            GPU usage via WMI pode não estar disponível em todos os drivers/sistemas.
-        </TextBlock>
     </Grid>
 </Window>
