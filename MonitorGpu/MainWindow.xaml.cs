@@ -94,27 +94,6 @@ namespace MonitorGpu
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de polling: {ex.Message}"));
             }
         }
-
-        private void BtnExport_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "gpu_monitor_log.csv");
-                var sb = new StringBuilder();
-                sb.AppendLine("Timestamp;CPU;GPU;RamUsedMB;RamTotalMB");
-                foreach (var r in history)
-                {
-                    sb.AppendLine($"{r.Timestamp:O};{r.Cpu:0.0};{r.Gpu:0.0};{r.RamUsedBytes/1024.0/1024.0:N0};{r.RamTotalBytes/1024.0/1024.0:N0}");
-                }
-                System.IO.File.WriteAllText(path, sb.ToString());
-                MessageBox.Show($"CSV exportado para: {path}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro exportando CSV: {ex.Message}");
-            }
-        }
-
         private int GetSelectedPollingMs()
         {
             if (CbPolling.SelectedItem is System.Windows.Controls.ComboBoxItem it && int.TryParse(it.Content.ToString(), out int v))

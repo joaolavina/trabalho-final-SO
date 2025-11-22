@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MonitorGpu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ad48193de46f0dd30216c2ced53fb2c86c49755")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc777455d343e8fc918dc69fbadcd3de80121b21")]
 [assembly: System.Reflection.AssemblyProductAttribute("MonitorGpu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MonitorGpu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

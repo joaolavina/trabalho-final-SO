@@ -16,7 +16,6 @@
             <Separator Width="16"/>
             <Button x:Name="BtnStart" Content="Iniciar" Click="BtnStart_Click" Margin="4,0"/>
             <Button x:Name="BtnStop" Content="Parar" Click="BtnStop_Click" Margin="4,0" IsEnabled="False"/>
-            <Button x:Name="BtnExport" Content="Exportar CSV" Click="BtnExport_Click" Margin="4,0"/>
             <TextBlock Text=" " Width="12"/>
             <TextBlock Text="Polling:" VerticalAlignment="Center"/>
             <ComboBox x:Name="CbPolling" Width="80" SelectedIndex="1" Margin="6,0">
