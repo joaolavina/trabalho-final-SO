@@ -10,4 +10,3 @@ namespace MonitorGpu;
 public partial class App : Application
 {
 }
-
