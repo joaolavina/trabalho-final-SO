@@ -21,21 +21,15 @@ namespace MonitorGpu.Services
 
             session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory); // eventos de memória do kernel
 
-            session.Source.Kernel.MemoryHardFault += data =>
-            {
-                Interlocked.Increment(ref hardFaults);
-            };
-
-            // session.Source.Kernel.MemoryTransitionFault += data =>
-            // {
-            //     Interlocked.Increment(ref softFaults);
-            // };
+            session.Source.Kernel.MemoryHardFault += _ => hardFaults++;
+            session.Source.Kernel.MemoryTransitionFault += _ => softFaults++;
+            session.Source.Kernel.MemoryDemandZeroFault += _ => softFaults++;
 
             Thread etwThread = new Thread(() => session.Source.Process())
             {
                 IsBackground = true
             };
-            
+
             etwThread.Start();
         }
 
