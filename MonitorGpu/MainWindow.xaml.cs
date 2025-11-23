@@ -18,6 +18,7 @@ namespace MonitorGpu
         private GpuReader gpuReader;
         private RamReader ramReader;
         private PageFaultReader pageFaultReader;
+        private ProcessInfoReader processInfoReader;
         private CancellationTokenSource? pollingCts;
         private CancellationTokenSource? pageFaultCts;
         private List<LogEntry> history = new();
@@ -30,6 +31,7 @@ namespace MonitorGpu
             gpuReader = new GpuReader();
             ramReader = new RamReader();
             pageFaultReader = new PageFaultReader();
+            processInfoReader = new ProcessInfoReader();
 
             TxtCpu.Text = TxtGpu.Text = TxtRam.Text = TxtGpuName.Text = "—";
         }
@@ -66,6 +68,8 @@ namespace MonitorGpu
             pageFaultCts = new CancellationTokenSource();
 
             await Task.Run(() => PageFaultMonitorLoopAsync(pageFaultCts.Token));
+
+            await Task.Run(() => ProcessPageFaultsLoopAsync(pageFaultCts.Token));
         }
 
         private void BtnPfStop_Click(object sender, RoutedEventArgs e)
@@ -79,7 +83,7 @@ namespace MonitorGpu
             BtnPfStop.IsEnabled = false;
         }
         
-        private async Task PageFaultMonitorLoopAsync(CancellationToken token)
+        private async Task PageFaultMonitorLoopAsync( CancellationToken token)
         {
             try
             { 
@@ -103,6 +107,33 @@ namespace MonitorGpu
             catch (Exception ex)
             {
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
+            }
+        }
+
+        private async Task ProcessPageFaultsLoopAsync(CancellationToken token)
+        {
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    // var data = processInfoReader.GetProcessesPageFaults();
+
+                    var data = new List<ProcessInfo> {
+                        new ProcessInfo { Id = 101, ProcessName = "explorer", PageFaults = 12.5f }
+                    };
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        DgPageFaults.ItemsSource = data;
+                    });
+
+                    await Task.Delay(3000);
+                }
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de processos: {ex.Message}"));
             }
         }
 
@@ -140,6 +171,7 @@ namespace MonitorGpu
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de polling: {ex.Message}"));
             }
         }
+
         private int GetSelectedPollingMs()
         {
             if (CbPolling.SelectedItem is System.Windows.Controls.ComboBoxItem it && int.TryParse(it.Content.ToString(), out int v))
