@@ -89,7 +89,7 @@
                     <!-- Page faults por processo -->
                      <StackPanel Grid.Column="1">
                         <TextBlock Text="Page Faults por Processo" FontSize="16" FontWeight="Bold" Margin="0,0,0,6"/>
-                        <DataGrid x:Name="DgPageFaults" AutoGenerateColumns="False" IsReadOnly="True" Height="360">
+                        <DataGrid x:Name="DgPageFaults" ItemsSource="{Binding ProcessList}" AutoGenerateColumns="False" IsReadOnly="True" Height="360">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="PID" Binding="{Binding Id}" Width="60"/>
                                 <DataGridTextColumn Header="Processo" Binding="{Binding ProcessName}" Width="*"/>

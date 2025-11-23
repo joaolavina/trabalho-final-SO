@@ -22,11 +22,14 @@ namespace MonitorGpu
         private ProcessInfoReader processInfoReader;
         private CancellationTokenSource? pollingCts;
         private CancellationTokenSource? pageFaultCts;
+        public ObservableCollection<ProcessInfo> ProcessList { get; set; } = new ObservableCollection<ProcessInfo>();
         private List<LogEntry> history = new();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = this;
 
             cpuReader = new CpuReader();
             gpuReader = new GpuReader();
@@ -120,12 +123,14 @@ namespace MonitorGpu
                 {
                     var data = processInfoReader.GetProcessesPageFaults();
 
-                    Dispatcher.Invoke(() =>
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        DgPageFaults.ItemsSource = data;
+                        ProcessList.Clear();
+                        foreach (var p in data)
+                            ProcessList.Add(p);
                     });
                     
-                    await Task.Delay(1000);
+                    await Task.Delay(10);
                 }
             } catch (OperationCanceledException) { }
             catch (Exception ex)
