@@ -6,7 +6,7 @@ namespace MonitorGpu.Services
     public class RamReader
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        private class MEMORYSTATUSEX
+        private class MEMORYSTATUSEX // estrutura de memória usada pela função GlobalMemoryStatusEx
         {
             public uint dwLength;
             public uint dwMemoryLoad;
@@ -23,30 +23,35 @@ namespace MonitorGpu.Services
             }
         }
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
 
         public (ulong totalBytes, ulong availBytes, float usedPercent) GetMemoryStatus()
         {
             var memStatus = new MEMORYSTATUSEX();
+
             if (!GlobalMemoryStatusEx(memStatus))
-                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error()); // erro na chamada da API
 
             ulong total = memStatus.ullTotalPhys;
-            ulong avail = memStatus.ullAvailPhys;
-            float usedPercent = (float)((double)(total - avail) * 100.0 / total);
-            return (total, avail, usedPercent);
+            ulong available = memStatus.ullAvailPhys;
+
+            if (total == 0)
+                return (total, available, 0.0f);    
+
+            float usedPercent = (float)((double)(total - available) * 100.0 / total);
+            return (total, available, usedPercent);
         }
 
         public string GetReadableUsage()
         {
-            var (total, avail, usedPercent) = GetMemoryStatus();
-            ulong used = total - avail;
+            var (total, available, usedPercent) = GetMemoryStatus();
+            ulong used = total - available;
 
-            const ulong OneGB = 1024UL * 1024UL * 1024UL;
+            const ulong GB = 1024UL * 1024UL * 1024UL; // 1GB = 1024^3 bytes = 1.073.741.824 bytes
 
-            if (used >= OneGB)
-                return $"{BytesToGB(used):N0} GB / {BytesToGB(total):N0} GB ({usedPercent:0.0}%)";
+            if (used >= GB) 
+                return $"{BytesToGB(used):N1} GB / {BytesToGB(total):N1} GB ({usedPercent:0.0}%)";
             else
                 return $"{BytesToMB(used):N0} MB / {BytesToMB(total):N0} MB ({usedPercent:0.0}%)";
         }

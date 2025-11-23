@@ -114,26 +114,27 @@ namespace MonitorGpu
                 {
                     var cpu = cpuReader.GetUsage();
                     var gpuUsage = gpuReader.GetUsage();
-                    var (total, avail, usedPercent) = ramReader.GetMemoryStatus();
-                    var timestamp = DateTime.Now;
                     var ramUsage = ramReader.GetReadableUsage();
+                    var timestamp = DateTime.Now;
 
-                    var log = $"{timestamp:HH:mm:ss} | CPU {cpu:0.0}% | GPU {gpuUsage:0.0}% | RAM {ramUsage}";
-                    history.Add(new LogEntry { Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamUsedBytes = total - avail, RamTotalBytes = total });
+                    var entry = new LogEntry
+                                {Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamFormatted = ramUsage};
+
+                    history.Add(entry);
 
                     Dispatcher.Invoke(() =>
-                    {
-                        TxtCpu.Text = $"{cpu:0.0}%";
-                        TxtGpu.Text = $"{gpuUsage:0.0}%";
-                        TxtRam.Text = $"{(total - avail) / 1024.0 / 1024.0:N0} MB / {total / 1024.0 / 1024.0:N0} MB ({usedPercent:0.0}%)";
-                        TxtGpuName.Text = "Não encontrado";
-                        TxtLog.Text = log + "\n" + TxtLog.Text;
-                    });
+                                {
+                                    TxtCpu.Text = entry.CpuFormatted;
+                                    TxtGpu.Text = entry.GpuFormatted;
+                                    TxtRam.Text = entry.RamFormatted;
+                                    TxtGpuName.Text = "Não encontrado";
+                                    TxtLog.Text = entry.AsLogLine + "\n" + TxtLog.Text;
+                                });
 
                     await Task.Delay(pollingMs, token);
                 }
             }
-            catch (OperationCanceledException) { /* normal */ }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de polling: {ex.Message}"));

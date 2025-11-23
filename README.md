@@ -7,6 +7,6 @@
 
 ## Utils (WIP)
 
+https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
 https://learn.microsoft.com/pt-br/windows/win32/etw/event-tracing-portal
-
 https://github.com/Microsoft/perfview/blob/main/documentation/TraceEvent/TraceEventLibrary.md
