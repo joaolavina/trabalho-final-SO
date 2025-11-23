@@ -10,36 +10,40 @@ namespace MonitorGpu.Services
     {
         private TraceEventSession? session;
         private long hardFaults = 0;
+        private long softFaults = 0;
 
         public void Start()
         {
-            if (session != null) return;
-
             session = new TraceEventSession("PageFaultSession")
             {
                 StopOnDispose = true
             };
 
-            session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory);
+            session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory); // eventos de memória do kernel
 
-            session.Source.Kernel.All += evt =>
+            session.Source.Kernel.MemoryHardFault += data =>
             {
-                if (evt.TaskName == "PageFault" &&
-                    evt.EventName == "PageFault")
-                {
-                    hardFaults++;
-                }
+                Interlocked.Increment(ref hardFaults);
             };
 
-            Thread etwThread = new Thread(() => session.Source.Process());
-            etwThread.IsBackground = true;
+            // session.Source.Kernel.MemoryTransitionFault += data =>
+            // {
+            //     Interlocked.Increment(ref softFaults);
+            // };
+
+            Thread etwThread = new Thread(() => session.Source.Process())
+            {
+                IsBackground = true
+            };
+            
             etwThread.Start();
         }
 
         public long GetAndResetFaults()
         {
-            var v = hardFaults;
+            var v = hardFaults + softFaults;
             hardFaults = 0;
+            softFaults = 0;
             return v;
         }
 

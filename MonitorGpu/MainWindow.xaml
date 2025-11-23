@@ -82,7 +82,7 @@
 
                     <!-- Conteúdo -->
                     <StackPanel Grid.Row="1">
-                        <TextBlock Text="Page Faults (soft/hard):"/>
+                        <TextBlock Text="Page fault/s:"/>
                         <TextBlock x:Name="TxtPageFaults" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
 
                         <!-- <TextBlock Text="Page Faults/seg (Total):"/>
