@@ -109,18 +109,17 @@ namespace MonitorGpu
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
             }
         }
-
         private async Task ProcessPageFaultsLoopAsync(CancellationToken token)
         {
             try
             {
                 while (!token.IsCancellationRequested)
                 {
-                    // var data = processInfoReader.GetProcessesPageFaults();
+                     var data = processInfoReader.GetProcessesPageFaults();
 
-                    var data = new List<ProcessInfo> {
-                        new ProcessInfo { Id = 101, ProcessName = "explorer", PageFaults = 12.5f }
-                    };
+                    // var data = new List<ProcessInfo> {
+                    //     new ProcessInfo { Id = 101, ProcessName = "explorer", PageFaults = 12.5f }
+                    // };
 
                     Dispatcher.Invoke(() =>
                     {
