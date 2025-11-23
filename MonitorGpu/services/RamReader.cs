@@ -42,9 +42,17 @@ namespace MonitorGpu.Services
         {
             var (total, avail, usedPercent) = GetMemoryStatus();
             ulong used = total - avail;
-            return $"{BytesToMB(used):N0} MB / {BytesToMB(total):N0} MB ({usedPercent:0.0}%)";
+
+            const ulong OneGB = 1024UL * 1024UL * 1024UL;
+
+            if (used >= OneGB)
+                return $"{BytesToGB(used):N0} GB / {BytesToGB(total):N0} GB ({usedPercent:0.0}%)";
+            else
+                return $"{BytesToMB(used):N0} MB / {BytesToMB(total):N0} MB ({usedPercent:0.0}%)";
         }
 
         private static double BytesToMB(ulong bytes) => bytes / 1024.0 / 1024.0;
+
+        private static double BytesToGB(ulong bytes) => bytes / 1024.0 / 1024.0 / 1024.0;
     }
 }

@@ -116,8 +116,9 @@ namespace MonitorGpu
                     var gpuUsage = gpuReader.GetUsage();
                     var (total, avail, usedPercent) = ramReader.GetMemoryStatus();
                     var timestamp = DateTime.Now;
+                    var ramUsage = ramReader.GetReadableUsage();
 
-                    var log = $"{timestamp:HH:mm:ss} | CPU {cpu:0.0}% | GPU {gpuUsage:0.0}% | RAM {(total - avail) / 1024.0 / 1024.0:N0}MB/{total / 1024.0 / 1024.0:N0}MB ({usedPercent:0.0}%)";
+                    var log = $"{timestamp:HH:mm:ss} | CPU {cpu:0.0}% | GPU {gpuUsage:0.0}% | RAM {ramUsage}";
                     history.Add(new LogEntry { Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamUsedBytes = total - avail, RamTotalBytes = total });
 
                     Dispatcher.Invoke(() =>
