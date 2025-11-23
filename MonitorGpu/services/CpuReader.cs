@@ -4,15 +4,15 @@ namespace MonitorGpu.Services
 {
     public class CpuReader
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool GetSystemTimes(out FILETIME idle, out FILETIME kernel, out FILETIME user);
-
         [StructLayout(LayoutKind.Sequential)]
         struct FILETIME
         {
             public uint Low;
             public uint High;
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool GetSystemTimes(out FILETIME idle, out FILETIME kernel, out FILETIME user);
 
         private ulong oldIdle;
         private ulong oldKernel;
