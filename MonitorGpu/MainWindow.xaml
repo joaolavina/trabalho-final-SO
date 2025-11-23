@@ -4,58 +4,98 @@
         Title="OS Monitor" Height="480" Width="720"
         MinHeight="420" MinWidth="600">
     <Grid Margin="12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="140"/>
-        </Grid.RowDefinitions>
+        <TabControl>
 
-        <!-- Cabeçalho + controles -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,0,10">
-            <TextBlock Text="GpuMonitor" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-            <Separator Width="16"/>
-            <Button x:Name="BtnStart" Content="Iniciar" Click="BtnStart_Click" Margin="4,0"/>
-            <Button x:Name="BtnStop" Content="Parar" Click="BtnStop_Click" Margin="4,0" IsEnabled="False"/>
-            <TextBlock Text=" " Width="12"/>
-            <TextBlock Text="Polling:" VerticalAlignment="Center"/>
-            <ComboBox x:Name="CbPolling" Width="80" SelectedIndex="1" Margin="6,0">
-                <ComboBoxItem>250</ComboBoxItem>
-                <ComboBoxItem>500</ComboBoxItem>
-                <ComboBoxItem>1000</ComboBoxItem>
-                <ComboBoxItem>2000</ComboBoxItem>
-            </ComboBox>
-            <TextBlock Text=" ms" VerticalAlignment="Center"/>
-            <TextBlock Text="   " Width="12"/>
-            <TextBlock Text="FPS (app):" VerticalAlignment="Center"/>
-            <TextBlock x:Name="TxtFps" FontWeight="Bold" Margin="6,0" VerticalAlignment="Center"/>
-        </StackPanel>
+            <!-- Aba de dashboard -->
+            <TabItem Header="Dashboard">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-        <!-- Grid com valores atuais -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
+                    <!-- Cabeçalho + controles -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,0,10">
+                        <TextBlock Text="GpuMonitor" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <Separator Width="16"/>
+                        <Button x:Name="BtnStart" Content="Iniciar" Click="BtnStart_Click" Margin="4,0"/>
+                        <Button x:Name="BtnStop" Content="Parar" Click="BtnStop_Click" Margin="4,0" IsEnabled="False"/>
+                        <TextBlock Text=" " Width="12"/>
+                        <TextBlock Text="Polling:" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="CbPolling" Width="80" SelectedIndex="1" Margin="6,0">
+                            <ComboBoxItem>250</ComboBoxItem>
+                            <ComboBoxItem>500</ComboBoxItem>
+                            <ComboBoxItem>1000</ComboBoxItem>
+                            <ComboBoxItem>2000</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Text=" ms" VerticalAlignment="Center"/>
+                        <TextBlock Text="   " Width="12"/>
+                    </StackPanel>
 
-            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                <TextBlock Text="Métricas atuais" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                <StackPanel>
-                    <TextBlock Text="CPU:"/>
-                    <TextBlock x:Name="TxtCpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <TextBlock Text="GPU (uso):"/>
-                    <TextBlock x:Name="TxtGpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <TextBlock Text="Memória física:"/>
-                    <TextBlock x:Name="TxtRam" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <TextBlock Text="GPU (nome):" Margin="0,6,0,0"/>
-                    <TextBlock x:Name="TxtGpuName" FontSize="13" Margin="0,0,0,6"/>
-                </StackPanel>
-            </StackPanel>
+                    <!-- Grid com valores atuais -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="Últimos logs" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                <TextBox x:Name="TxtLog" VerticalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"
-                         AcceptsReturn="True" Height="260"/>
-            </StackPanel>
-        </Grid>
+                        <!-- Painel esquerdo -->
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Métricas atuais" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <StackPanel>
+                                <TextBlock Text="CPU:"/>
+                                <TextBlock x:Name="TxtCpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="GPU (uso):"/>
+                                <TextBlock x:Name="TxtGpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="Memória física:"/>
+                                <TextBlock x:Name="TxtRam" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="GPU (nome):" Margin="0,6,0,0"/>
+                                <TextBlock x:Name="TxtGpuName" FontSize="13" Margin="0,0,0,6"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Logs -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Últimos logs" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <TextBox x:Name="TxtLog" VerticalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"
+                                     AcceptsReturn="True" Height="260"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Aba de page faults -->
+            <TabItem Header="Page Fault Monitor">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Título e controle -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Page Faults" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <Button x:Name="BtnPfStart" Content="Iniciar" Margin="6,0" Click="BtnPfStart_Click"/>
+                        <Button x:Name="BtnPfStop" Content="Parar" Margin="6,0" Click="BtnPfStop_Click" IsEnabled="False"/>
+                    </StackPanel>
+
+                    <!-- Conteúdo -->
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Text="Page Faults (soft/hard):"/>
+                        <TextBlock x:Name="TxtPageFaults" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+
+                        <!-- <TextBlock Text="Page Faults/seg (Total):"/>
+                        <TextBlock x:Name="TxtPageFaults" FontSize="16" FontWeight="Bold" Margin="0,6"/> -->
+
+                        <Separator Margin="0,10"/>
+
+                        <TextBlock Text="Histórico:"/>
+                        <TextBox x:Name="TxtPageFaultsLog" VerticalScrollBarVisibility="Auto" IsReadOnly="True"
+                                 AcceptsReturn="True" Height="240"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

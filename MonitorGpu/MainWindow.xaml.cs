@@ -17,9 +17,9 @@ namespace MonitorGpu
         private CpuReader cpuReader;
         private GpuReader gpuReader;
         private RamReader ramReader;
-        private FpsCounter fpsCounter;
-
+        private PageFaultReader pageFaultReader;
         private CancellationTokenSource? pollingCts;
+        private CancellationTokenSource? pageFaultCts;
         private List<LogEntry> history = new();
 
         public MainWindow()
@@ -29,27 +29,21 @@ namespace MonitorGpu
             cpuReader = new CpuReader();
             gpuReader = new GpuReader();
             ramReader = new RamReader();
-            fpsCounter = new FpsCounter();
+            pageFaultReader = new PageFaultReader();
 
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
-            TxtFps.Text = "0.0";
             TxtCpu.Text = TxtGpu.Text = TxtRam.Text = TxtGpuName.Text = "—";
-            TxtLog.Text = "Pronto.\n";
-        }
-
-        private void CompositionTarget_Rendering(object? sender, EventArgs e)
-        {
-            fpsCounter.Frame();
-            TxtFps.Text = $"{fpsCounter.GetFps():0.0}";
         }
 
         private async void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             if (pollingCts != null) return;
+
             BtnStart.IsEnabled = false;
             BtnStop.IsEnabled = true;
-            int pollingMs = GetSelectedPollingMs();
+
             pollingCts = new CancellationTokenSource();
+            
+            int pollingMs = GetSelectedPollingMs();
             await Task.Run(() => PollLoopAsync(pollingMs, pollingCts.Token));
         }
 
@@ -57,8 +51,59 @@ namespace MonitorGpu
         {
             pollingCts?.Cancel();
             pollingCts = null;
+
             BtnStart.IsEnabled = true;
             BtnStop.IsEnabled = false;
+        }
+
+        private async void BtnPfStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (pageFaultCts != null) return;
+
+            BtnPfStart.IsEnabled = false;
+            BtnPfStop.IsEnabled = true;
+
+            pageFaultCts = new CancellationTokenSource();
+
+            await Task.Run(() => PageFaultMonitorLoopAsync(pageFaultCts.Token));
+        }
+
+        private void BtnPfStop_Click(object sender, RoutedEventArgs e)
+        {
+            pageFaultCts?.Cancel();
+            pageFaultCts = null;
+
+            pageFaultReader.Stop();
+
+            BtnPfStart.IsEnabled = true;
+            BtnPfStop.IsEnabled = false;
+        }
+        
+        private async Task PageFaultMonitorLoopAsync(CancellationToken token)
+        {
+            try
+            { 
+                pageFaultReader.Start();
+                
+                while (!token.IsCancellationRequested)
+                {
+                    long faults = pageFaultReader.GetAndResetFaults();
+                    string log = $"{DateTime.Now:HH:mm:ss} | Page Faults: {faults} F/s";
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        TxtPageFaults.Text = $"{faults}";
+                        TxtPageFaultsLog.Text = log + "\n" + TxtPageFaultsLog.Text;
+                    });
+
+                    await Task.Delay(1000); 
+                }
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
+            }
         }
 
         private async Task PollLoopAsync(int pollingMs, CancellationToken token)

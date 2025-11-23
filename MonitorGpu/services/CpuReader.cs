@@ -34,7 +34,7 @@ namespace MonitorGpu.Services
             oldKernel = kernelTime;
             oldUser = userTime;
 
-            ulong total = kernelDiff + userDiff;
+            ulong total = kernelDiff + userDiff; // Tempo que não é ocioso desde a última leitura 
 
             if (total == 0)
                 return 0;
