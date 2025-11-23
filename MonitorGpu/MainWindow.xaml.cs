@@ -2,6 +2,7 @@
 using MonitorGpu.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Threading;
@@ -67,9 +68,10 @@ namespace MonitorGpu
 
             pageFaultCts = new CancellationTokenSource();
 
-            await Task.Run(() => PageFaultMonitorLoopAsync(pageFaultCts.Token));
+            var t1 = Task.Run(() => PageFaultMonitorLoopAsync(pageFaultCts.Token));
+            var t2 = Task.Run(() => ProcessPageFaultsLoopAsync(pageFaultCts.Token));
 
-            await Task.Run(() => ProcessPageFaultsLoopAsync(pageFaultCts.Token));
+            await Task.WhenAll(t1, t2);
         }
 
         private void BtnPfStop_Click(object sender, RoutedEventArgs e)
@@ -109,30 +111,26 @@ namespace MonitorGpu
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
             }
         }
+        
         private async Task ProcessPageFaultsLoopAsync(CancellationToken token)
         {
             try
             {
                 while (!token.IsCancellationRequested)
                 {
-                     var data = processInfoReader.GetProcessesPageFaults();
-
-                    // var data = new List<ProcessInfo> {
-                    //     new ProcessInfo { Id = 101, ProcessName = "explorer", PageFaults = 12.5f }
-                    // };
+                    var data = processInfoReader.GetProcessesPageFaults();
 
                     Dispatcher.Invoke(() =>
                     {
                         DgPageFaults.ItemsSource = data;
                     });
-
-                    await Task.Delay(3000);
+                    
+                    await Task.Delay(1000);
                 }
-            }
-            catch (OperationCanceledException) { }
+            } catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de processos: {ex.Message}"));
+                Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
             }
         }
 

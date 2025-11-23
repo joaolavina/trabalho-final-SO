@@ -31,6 +31,7 @@ namespace MonitorGpu.Services
         private Dictionary<int, (string Name, uint PageFaults)> GetProcessesSnapshot()
         {
             var snapshot = new Dictionary<int, (string, uint)>();
+
             foreach (var proc in Process.GetProcesses())
             {
                 try
@@ -40,10 +41,9 @@ namespace MonitorGpu.Services
                         snapshot[proc.Id] = (proc.ProcessName, counters.PageFaultCount);
                     }
                 }
-                catch
-                {
-                }
+                catch {  }
             }
+
             return snapshot;
         }
 
@@ -57,11 +57,11 @@ namespace MonitorGpu.Services
 
             var result = new List<ProcessInfo>();
 
-            foreach (var kvp in snapshot2)
+            foreach (var proc in snapshot2)
             {
-                int pid = kvp.Key;
-                string name = kvp.Value.Name;
-                uint faults2 = kvp.Value.PageFaults;
+                int pid = proc.Key;
+                string name = proc.Value.Name;
+                uint faults2 = proc.Value.PageFaults;
 
                 if (snapshot1.TryGetValue(pid, out var prev))
                 {
