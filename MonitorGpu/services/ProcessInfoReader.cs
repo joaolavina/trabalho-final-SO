@@ -28,9 +28,9 @@ namespace MonitorGpu.Services
         [DllImport("psapi.dll", SetLastError = true)]
         private static extern bool GetProcessMemoryInfo(IntPtr hProcess, out PROCESS_MEMORY_COUNTERS counters, uint size);
 
-        private Dictionary<int, (string Name, uint PageFaults)> GetProcessesSnapshot()
+        private Dictionary<int, (string Name, uint PageFaults)> GetProcessesState() // pegar estado atual dos processos
         {
-            var snapshot = new Dictionary<int, (string, uint)>();
+            var state = new Dictionary<int, (string, uint)>();
 
             foreach (var proc in Process.GetProcesses())
             {
@@ -38,32 +38,32 @@ namespace MonitorGpu.Services
                 {
                     if (GetProcessMemoryInfo(proc.Handle, out var counters, (uint)Marshal.SizeOf(typeof(PROCESS_MEMORY_COUNTERS))))
                     {
-                        snapshot[proc.Id] = (proc.ProcessName, counters.PageFaultCount);
+                        state[proc.Id] = (proc.ProcessName, counters.PageFaultCount);
                     }
                 }
                 catch {  }
             }
 
-            return snapshot;
+            return state;
         }
 
-        public List<ProcessInfo> GetProcessesPageFaults()
+        public List<ProcessInfo> GetProcessesPageFaults() 
         {
-            var snapshot1 = GetProcessesSnapshot();
+            var state1 = GetProcessesState();
 
             Thread.Sleep(1000);
 
-            var snapshot2 = GetProcessesSnapshot();
+            var state2 = GetProcessesState();
 
             var result = new List<ProcessInfo>();
 
-            foreach (var proc in snapshot2)
+            foreach (var proc in state2)
             {
-                int pid = proc.Key;
+                int pid = proc.Key; 
                 string name = proc.Value.Name;
                 uint faults2 = proc.Value.PageFaults;
 
-                if (snapshot1.TryGetValue(pid, out var prev))
+                if (state1.TryGetValue(pid, out var prev)) // diferença do estado 2 para o 1
                 {
                     uint faults1 = prev.PageFaults;
                     float perSec = (faults2 - faults1) / (1000 / 1000f);

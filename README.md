@@ -7,13 +7,16 @@
 ```dotnet run --project MonitorGpu``` - Roda o projeto MonitorGpu da raiz
 
 
-## Utils (WIP)
+## Utils
 
 RamReader
-- [Estrutura usada por GlobalMemoryStatusEx](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
+- [MEMORYSTATUSEX - Estrutura usada por GlobalMemoryStatusEx](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
 
 CpuReader
-- [Estrutura usada por GetSystemTimes](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
+- [FILETIME - Estrutura usada por GetSystemTimes](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
+
+ProcessInfoReader
+- [PROCESS_MEMORY_COUNTERS - Estrutura usada por GetProcessMemoryInfo](https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters)
 
 ETW
 - Event Tracing for Windows (ETW) is a general-purpose, high-speed tracing facility provided by the operating system. Using a buffering and logging mechanism implemented in the kernel, ETW provides a tracing mechanism for events raised by both user-mode applications and kernel-mode device drivers.
