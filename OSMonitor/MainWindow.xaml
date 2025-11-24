@@ -1,0 +1,104 @@
+﻿<Window x:Class="OSMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OS Monitor" Height="480" Width="720"
+        MinHeight="420" MinWidth="600">
+    <Grid Margin="12">
+        <TabControl>
+
+            <!-- Aba de recursos -->
+            <TabItem Header="Recursos">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Cabeçalho + controles -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,0,10">
+                        <TextBlock Text="OS Monitor" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <Separator Width="16" Margin="10,0,0,0"/>
+                        <Button x:Name="BtnStart" Content="Iniciar" Click="BtnStart_Click" Margin="4,0"/>
+                        <Button x:Name="BtnStop" Content="Parar" Click="BtnStop_Click" Margin="4,0" IsEnabled="False"/>
+                        <TextBlock Text=" " Width="12"/>
+                        <TextBlock Text="Polling:" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="CbPolling" Width="80" SelectedIndex="1" Margin="6,0">
+                            <ComboBoxItem>250</ComboBoxItem>
+                            <ComboBoxItem>500</ComboBoxItem>
+                            <ComboBoxItem>1000</ComboBoxItem>
+                            <ComboBoxItem>2000</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Text=" ms" VerticalAlignment="Center"/>
+                        <TextBlock Text="   " Width="12"/>
+                    </StackPanel>
+
+                    <!-- Grid com valores atuais -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Painel esquerdo -->
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Métricas atuais" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <StackPanel>
+                                <TextBlock Text="CPU:"/>
+                                <TextBlock x:Name="TxtCpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="GPU (nome):" Margin="0,6,0,0"/>
+                                <TextBlock x:Name="TxtGpuName" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="GPU (uso):"/>
+                                <TextBlock x:Name="TxtGpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="Memória física:"/>
+                                <TextBlock x:Name="TxtRam" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Logs -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Últimos logs" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <TextBox x:Name="TxtLog" VerticalScrollBarVisibility="Auto" IsReadOnly="True" TextWrapping="Wrap"
+                                     AcceptsReturn="True" Height="260"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Aba de page faults -->
+            <TabItem Header="Page Fault Monitor">
+                <Grid Margin="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Título e controle geral -->
+                   <StackPanel Grid.Column="0">
+                            <TextBlock Text="Page Faults" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Button x:Name="BtnPfStart" Content="Iniciar" Margin="6,0" Click="BtnPfStart_Click"/>
+                                <Button x:Name="BtnPfStop" Content="Parar" Margin="6,0" Click="BtnPfStop_Click" IsEnabled="False"/>
+                            </StackPanel>
+                            <TextBlock Text="Page fault/s:" FontWeight="Bold"/>
+                            <TextBlock x:Name="TxtPageFaults" FontSize="16" FontWeight="Bold" Margin="0,0,0,12"/>
+                            <TextBlock Text="Histórico:" FontWeight="Bold"/>
+                            <TextBox x:Name="TxtPageFaultsLog" VerticalScrollBarVisibility="Auto" IsReadOnly="True"
+                                     AcceptsReturn="True" Height="240"/>
+                    </StackPanel>
+
+                    <!-- Page faults por processo -->
+                     <StackPanel Grid.Column="1">
+                        <TextBlock Text="Page Faults por Processo" FontSize="16" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <DataGrid x:Name="DgPageFaults" ItemsSource="{Binding ProcessList}" AutoGenerateColumns="False" IsReadOnly="True" Height="360">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="PID" Binding="{Binding Id}" Width="60"/>
+                                <DataGridTextColumn Header="Processo" Binding="{Binding ProcessName}" Width="*"/>
+                                <DataGridTextColumn Header="Page Faults" Binding="{Binding PageFaults}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
