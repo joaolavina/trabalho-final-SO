@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using MonitorGpu.Models;
+using OSMonitor.Models;
 
-namespace MonitorGpu.Services
+namespace OSMonitor.Services
 {
     public class ProcessInfoReader
     {

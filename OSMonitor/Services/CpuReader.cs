@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace MonitorGpu.Services
+namespace OSMonitor.Services
 {
     public class CpuReader
     {

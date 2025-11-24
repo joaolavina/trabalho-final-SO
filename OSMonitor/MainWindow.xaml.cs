@@ -1,5 +1,5 @@
-﻿using MonitorGpu.Models;
-using MonitorGpu.Services;
+﻿using OSMonitor.Models;
+using OSMonitor.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Media;
 
 
-namespace MonitorGpu
+namespace OSMonitor
 {
     public partial class MainWindow : Window
     {
@@ -37,7 +37,9 @@ namespace MonitorGpu
             pageFaultReader = new PageFaultReader();
             processInfoReader = new ProcessInfoReader();
 
-            TxtCpu.Text = TxtGpu.Text = TxtRam.Text = TxtGpuName.Text = "—";
+            TxtCpu.Text = TxtGpu.Text = TxtRam.Text = "?";
+
+            TxtGpuName.Text = gpuReader.GetName();
         }
 
         private async void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -143,10 +145,7 @@ namespace MonitorGpu
         private async Task PollLoopAsync(int pollingMs, CancellationToken token)
         {
             try
-            {
-                var gpuName = gpuReader.GetName();
-                TxtGpuName.Text = gpuName;
-                
+            {            
                 while (!token.IsCancellationRequested)
                 {
                     var cpu = cpuReader.GetUsage();

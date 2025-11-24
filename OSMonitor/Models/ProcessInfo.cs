@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace MonitorGpu.Models
+namespace OSMonitor.Models
 {
     public class ProcessInfo : INotifyPropertyChanged
     {

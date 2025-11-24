@@ -1,6 +1,6 @@
 using System.Management;
 
-namespace MonitorGpu.Services
+namespace OSMonitor.Services
 {
     public class GpuReader
     {
@@ -20,7 +20,7 @@ namespace MonitorGpu.Services
         }
         public string GetName()
         {
-            string gpuName = null;
+            string gpuName = "";
 
             var searcher = new ManagementObjectSearcher("select Name from Win32_VideoController");
 

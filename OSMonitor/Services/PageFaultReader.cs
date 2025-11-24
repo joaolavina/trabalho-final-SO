@@ -4,7 +4,7 @@ using Microsoft.Diagnostics.Tracing.Session;
 using System;
 using System.Threading;
 
-namespace MonitorGpu.Services
+namespace OSMonitor.Services
 {
     public class PageFaultReader
     {

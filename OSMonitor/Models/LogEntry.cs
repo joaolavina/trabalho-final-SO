@@ -1,4 +1,4 @@
-namespace MonitorGpu.Models
+namespace OSMonitor.Models
 {
 public class LogEntry
 {
