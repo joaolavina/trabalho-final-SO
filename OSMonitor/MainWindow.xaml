@@ -49,6 +49,12 @@
                                 <TextBlock x:Name="TxtGpuName" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
                                 <TextBlock Text="GPU (uso):"/>
                                 <TextBlock x:Name="TxtGpu" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <TextBlock Text="GPU (temperatura):"/>
+                                <TextBlock x:Name="TxtGpuTemp" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>       
+                                <TextBlock Text="GPU (clock):"/>
+                                <TextBlock x:Name="TxtGpuClock" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>      
+                                <TextBlock Text="GPU (vram clock):"/>
+                                <TextBlock x:Name="TxtGpuMemClock" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>                                                       
                                 <TextBlock Text="Memória física:"/>
                                 <TextBlock x:Name="TxtRam" FontSize="14" FontWeight="Bold" Margin="0,0,0,6"/>
                             </StackPanel>
@@ -65,7 +71,7 @@
             </TabItem>
             
             <!-- Aba de page faults -->
-            <TabItem Header="Page Fault Monitor">
+            <TabItem Header="Page Faults">
                 <Grid Margin="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />

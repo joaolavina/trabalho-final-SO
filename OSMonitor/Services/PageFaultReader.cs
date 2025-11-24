@@ -8,24 +8,24 @@ namespace OSMonitor.Services
 {
     public class PageFaultReader
     {
-        private TraceEventSession? session;
-        private long hardFaults = 0;
-        private long softFaults = 0;
+        private TraceEventSession? _session;
+        private long _hardFaults = 0;
+        private long _softFaults = 0;
 
         public void Start()
         {
-            session = new TraceEventSession("PageFaultSession")
+            _session = new TraceEventSession("PageFaultSession")
             {
                 StopOnDispose = true
             };
 
-            session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory); // eventos de memória do kernel
+            _session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory); // eventos de memória do kernel
 
-            session.Source.Kernel.MemoryHardFault += _ => hardFaults++;
-            session.Source.Kernel.MemoryTransitionFault += _ => softFaults++;
-            session.Source.Kernel.MemoryDemandZeroFault += _ => softFaults++;
+            _session.Source.Kernel.MemoryHardFault += _ => _hardFaults++; // acesso ao disco
+            _session.Source.Kernel.MemoryTransitionFault += _ => _softFaults++; // fora do working set do processo
+            _session.Source.Kernel.MemoryDemandZeroFault += _ => _softFaults++; // página zerada
 
-            Thread etwThread = new Thread(() => session.Source.Process())
+            Thread etwThread = new Thread(() => _session.Source.Process())
             {
                 IsBackground = true
             };
@@ -35,16 +35,16 @@ namespace OSMonitor.Services
 
         public long GetAndResetFaults()
         {
-            var v = hardFaults + softFaults;
-            hardFaults = 0;
-            softFaults = 0;
+            var v = _hardFaults + _softFaults;
+            _hardFaults = 0;
+            _softFaults = 0;
             return v;
         }
 
         public void Stop()
         {
-            session?.Dispose();
-            session = null;
+            _session?.Dispose();
+            _session = null;
         }
     }
 }

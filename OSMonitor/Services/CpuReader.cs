@@ -14,9 +14,9 @@ namespace OSMonitor.Services
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool GetSystemTimes(out FILETIME idle, out FILETIME kernel, out FILETIME user);
 
-        private ulong oldIdle;
-        private ulong oldKernel;
-        private ulong oldUser;
+        private ulong _oldIdle;
+        private ulong _oldKernel;
+        private ulong _oldUser;
 
         public float GetUsage()
         {
@@ -26,13 +26,13 @@ namespace OSMonitor.Services
             ulong kernelTime = ((ulong)kernel.High << 32) | kernel.Low; // Tempo rodando instruções em modo kernel
             ulong userTime = ((ulong)user.High << 32) | user.Low; // Tempo rodando instruções em modo usuário
 
-            ulong idleDiff = idleTime - oldIdle;
-            ulong kernelDiff = kernelTime - oldKernel;
-            ulong userDiff = userTime - oldUser;
+            ulong idleDiff = idleTime - _oldIdle;
+            ulong kernelDiff = kernelTime - _oldKernel;
+            ulong userDiff = userTime - _oldUser;
 
-            oldIdle = idleTime;
-            oldKernel = kernelTime;
-            oldUser = userTime;
+            _oldIdle = idleTime;
+            _oldKernel = kernelTime;
+            _oldUser = userTime;
 
             ulong total = kernelDiff + userDiff; // Tempo que não é ocioso desde a última leitura 
 

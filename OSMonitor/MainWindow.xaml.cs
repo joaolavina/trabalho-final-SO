@@ -37,7 +37,8 @@ namespace OSMonitor
             pageFaultReader = new PageFaultReader();
             processInfoReader = new ProcessInfoReader();
 
-            TxtCpu.Text = TxtGpu.Text = TxtRam.Text = "?";
+            TxtCpu.Text = TxtGpu.Text = TxtRam.Text = 
+                TxtGpuTemp.Text = TxtGpuClock.Text = TxtGpuMemClock.Text = "?";
 
             TxtGpuName.Text = gpuReader.GetName();
         }
@@ -145,13 +146,16 @@ namespace OSMonitor
         private async Task PollLoopAsync(int pollingMs, CancellationToken token)
         {
             try
-            {            
+            {
                 while (!token.IsCancellationRequested)
                 {
                     var cpu = cpuReader.GetUsage();
                     var gpuUsage = gpuReader.GetUsage();
                     var ramUsage = ramReader.GetReadableUsage();
                     var timestamp = DateTime.Now;
+                    var gpuTemp = gpuReader.GetTemperature();
+                    var gpuClock = gpuReader.GetGraphicsClock();
+                    var gpuMemClock = gpuReader.GetMemoryClock();
 
                     var entry = new LogEntry
                     { Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamFormatted = ramUsage };
@@ -164,6 +168,9 @@ namespace OSMonitor
                                     TxtGpu.Text = entry.GpuFormatted;
                                     TxtRam.Text = entry.RamFormatted;
                                     TxtLog.Text = entry.AsLogLine + "\n" + TxtLog.Text;
+                                    TxtGpuTemp.Text = $"{gpuTemp} °C";
+                                    TxtGpuClock.Text = $"{gpuClock} MHz";
+                                    TxtGpuMemClock.Text = $"{gpuMemClock} MHz";
                                 });
 
                     await Task.Delay(pollingMs, token);
