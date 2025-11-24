@@ -21,9 +21,9 @@ namespace OSMonitor.Services
 
             _session.EnableKernelProvider(KernelTraceEventParser.Keywords.Memory); // eventos de memória do kernel
 
-            _session.Source.Kernel.MemoryHardFault += _ => _hardFaults++;
-            _session.Source.Kernel.MemoryTransitionFault += _ => _softFaults++;
-            _session.Source.Kernel.MemoryDemandZeroFault += _ => _softFaults++;
+            _session.Source.Kernel.MemoryHardFault += _ => _hardFaults++; // acesso ao disco
+            _session.Source.Kernel.MemoryTransitionFault += _ => _softFaults++; // fora do working set do processo
+            _session.Source.Kernel.MemoryDemandZeroFault += _ => _softFaults++; // página zerada
 
             Thread etwThread = new Thread(() => _session.Source.Process())
             {
