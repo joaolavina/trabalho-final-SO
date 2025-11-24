@@ -48,7 +48,7 @@ namespace MonitorGpu
             BtnStop.IsEnabled = true;
 
             pollingCts = new CancellationTokenSource();
-            
+
             int pollingMs = GetSelectedPollingMs();
             await Task.Run(() => PollLoopAsync(pollingMs, pollingCts.Token));
         }
@@ -87,13 +87,13 @@ namespace MonitorGpu
             BtnPfStart.IsEnabled = true;
             BtnPfStop.IsEnabled = false;
         }
-        
-        private async Task PageFaultMonitorLoopAsync( CancellationToken token)
+
+        private async Task PageFaultMonitorLoopAsync(CancellationToken token)
         {
             try
-            { 
+            {
                 pageFaultReader.Start();
-                
+
                 while (!token.IsCancellationRequested)
                 {
                     long faults = pageFaultReader.GetAndResetFaults();
@@ -105,7 +105,7 @@ namespace MonitorGpu
                         TxtPageFaultsLog.Text = log + "\n" + TxtPageFaultsLog.Text;
                     });
 
-                    await Task.Delay(1000); 
+                    await Task.Delay(1000);
                 }
             }
             catch (OperationCanceledException) { }
@@ -114,7 +114,7 @@ namespace MonitorGpu
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
             }
         }
-        
+
         private async Task ProcessPageFaultsLoopAsync(CancellationToken token)
         {
             try
@@ -129,10 +129,11 @@ namespace MonitorGpu
                         foreach (var p in data)
                             ProcessList.Add(p);
                     });
-                    
+
                     await Task.Delay(10);
                 }
-            } catch (OperationCanceledException) { }
+            }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 Dispatcher.Invoke(() => MessageBox.Show($"Erro no loop de page faults: {ex.Message}"));
@@ -143,6 +144,9 @@ namespace MonitorGpu
         {
             try
             {
+                var gpuName = gpuReader.GetName();
+                TxtGpuName.Text = gpuName;
+                
                 while (!token.IsCancellationRequested)
                 {
                     var cpu = cpuReader.GetUsage();
@@ -151,7 +155,7 @@ namespace MonitorGpu
                     var timestamp = DateTime.Now;
 
                     var entry = new LogEntry
-                                {Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamFormatted = ramUsage};
+                    { Timestamp = timestamp, Cpu = cpu, Gpu = gpuUsage, RamFormatted = ramUsage };
 
                     history.Add(entry);
 
@@ -160,7 +164,6 @@ namespace MonitorGpu
                                     TxtCpu.Text = entry.CpuFormatted;
                                     TxtGpu.Text = entry.GpuFormatted;
                                     TxtRam.Text = entry.RamFormatted;
-                                    TxtGpuName.Text = "Não encontrado";
                                     TxtLog.Text = entry.AsLogLine + "\n" + TxtLog.Text;
                                 });
 

@@ -18,5 +18,24 @@ namespace MonitorGpu.Services
 
             return usage;
         }
+        public string GetName()
+        {
+            string gpuName = null;
+
+            var searcher = new ManagementObjectSearcher("select Name from Win32_VideoController");
+
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                var n = mo["Name"]?.ToString();
+                if (!string.IsNullOrEmpty(n))
+                {
+                    gpuName = n;
+                    break;
+                }
+            }
+
+            return gpuName ?? "Não encontrado";
+        }
     }
+
 }
