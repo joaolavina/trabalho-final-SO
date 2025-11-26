@@ -1,6 +1,6 @@
 # OS Monitor
 
-**OS Monitor** é uma aplicação desktop desenvolvida em C# com .NET 9.0 que monitora em tempo real os recursos do Windows. A aplicação tem interface gráfica (WPF) para visualizar o uso de CPU, GPU, memória RAM e falhas de página (page faults) gerais do sistema e dos processos em execução.
+**OS Monitor** é uma aplicação desktop desenvolvida em C# com .NET 9.0 que monitora em tempo real os recursos do Windows. A aplicação tem interface gráfica (WPF) para visualizar o uso de CPU, GPU, memória RAM e falhas de página (page faults) gerais do sistema e dos processos em execução. Para iniciar a aplicação, é necessário usar o modo administrador
 
 ### Monitoramento de Recursos
 - **CPU**: Leitura de uso percentual em tempo real através da API `GetSystemTimes`
@@ -38,6 +38,11 @@ dotnet run --project OSMonitor
 
 # Formatar código conforme .editorconfig
 dotnet format
+
+#  Buildar o projeto
+dotnet build
+
+Obs.: O executável gerado deve ser executado como administrador
 ```
 
 ## Referências
